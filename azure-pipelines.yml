@@ -1,0 +1,12 @@
+# Starter pipeline
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- script: python -m pytest -p no:warnings tests/
+  displayName: 'Run tests'
