@@ -8,8 +8,11 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-- script: python -m pip install pytest
-  displayName: 'Install pytest'
+- script: python -m pip install --upgrade pip
+  displayName: 'Upgrade pip'
+
+- script: pip install -r requirements.txt
+  displayName: 'Install requirements'
 
 - script: python -m pytest -p no:warnings tests/
   displayName: 'Run tests'
