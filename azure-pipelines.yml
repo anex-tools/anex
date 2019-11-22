@@ -1,21 +1,16 @@
-# Starter pipeline
-# https://aka.ms/yaml
-
 trigger:
 - master
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: 'ubuntu-18.04'
 
 steps:
-- script: python -m pip install pip
-  displayName: 'Install pip'
-
-- script: pip install --upgrade pip
-  displayName: 'Upgrade pip'
-
-- script: pip install -r requirements.txt
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '3.7'
+- script: |
+    python -m pip install --upgrade pip
+    python -p pip install -r requirements.txt
   displayName: 'Install requirements'
-
 - script: python -m pytest -p no:warnings tests/
   displayName: 'Run tests'
