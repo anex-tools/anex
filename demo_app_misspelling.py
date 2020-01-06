@@ -5,6 +5,7 @@ import streamlit as st
 DATASET_PATH = 'tests/epilepsy_tweets.csv'
 ANNOTATION_COL_NAME = 'full_text'
 ENCODING = 'utf8'
+CHARACTERS_LIMIT = 30
 
 
 @st.cache
@@ -41,10 +42,23 @@ st.write("Cleaning removed ", na_rows_count, ' missing annotations and ',
 ## Misspellings
 Look for the possible misspelled candidates of a word.
 '''
-word = st.text_input('Enter a candidate word')
+word = st.text_input(f'Enter a word (under {CHARACTERS_LIMIT} chars)')
 if word != '':
-    st.write('The possible misspelled candidates found in the label dataset '
-             'are : ', annot_analyzer.find_misspelled_candidates(word))
+    words = word.strip().split(' ')
+    if len(words) > 1:
+        st.write('**Warning ! Several words were typed, only the first one'
+                 f' (`{words[0]}`) is considered !**')
+    if len(words[0]) < CHARACTERS_LIMIT:
+        misspelled_candidates = annot_analyzer.find_misspelled_candidates(words[0])
+        if len(misspelled_candidates) > 0:
+            st.write('The possible misspelled candidates found in the '
+                     'label dataset are : ', misspelled_candidates)
+        else:
+            st.write('No misspelled candidate could be found for '
+                     f'the word : `{words[0]}`')
+    else:
+        st.write(f'** Warning ! Given word (`{words[0]}`) is too long ! '
+                 f'Word must be under `{CHARACTERS_LIMIT}` characters... **')
 
 '''
 ## Select labels
